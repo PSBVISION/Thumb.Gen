@@ -9,6 +9,7 @@ import Generate from "./pages/Generate";
 import MyGenerate from "./pages/MyGenerate";
 import YtPreview from "./pages/YtPreview";
 import Login from "./components/Login";
+import NotFound from "./pages/NotFound";
 
 export default function App() {
     return (
@@ -23,6 +24,7 @@ export default function App() {
                 <Route path="/preview" element={<YtPreview />} />
                 <Route path="/pricing" element={<Pricing />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="*" element={<NotFound />} />
             </Routes>
             <Footer />
         </>
