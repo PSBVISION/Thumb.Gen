@@ -1,11 +1,12 @@
 import {
+  ChevronDownIcon,
   CpuIcon,
   ImageIcon,
   PenToolIcon,
   SparkleIcon,
   SquareIcon,
 } from "lucide-react";
-import type { ThumbnailStyle } from "../assets/assets";
+import { thumbnailStyles, type ThumbnailStyle } from "../assets/assets";
 
 const StyleSelector = ({
   value,
@@ -37,15 +38,45 @@ const StyleSelector = ({
       <label className="block text-sm font-medium text-zinc-200">
         Thumbnail Style
       </label>
-      <button type="button" onClick={()=>setIsOpen(!isOpen)} className="flex w-full items-center justify-between rounded-md border px-4 py-3 text-left transition bg-white/8">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex w-full items-center justify-between rounded-md border px-4 py-3 text-left transition bg-white/8 border-white/10 text-zinc-200 hover:bg-white-12"
+      >
         <div className="space-y-1">
           <div className="flex items-center gap-2 font-medium">
             {styleIcons[value]}
             <span>{value}</span>
           </div>
-          <p className="text-xs text-zinc-400">styleDescriptions[value</p>
+          <p className="text-xs text-zinc-400">{styleDescriptions[value]}</p>
         </div>
+        <ChevronDownIcon
+          className={[
+            "h-5 w-5 text-zinc-400 transition-transform",
+            isOpen && "rotate-180",
+          ].join(" ")}
+        />
       </button>
+      {isOpen && (
+        <div className="absolute bottom-0 z-50 mt-1 w-full rounded-md border border-white/12 bg-black/20 backdrop-blur-3xl shadow-lg">
+          {thumbnailStyles.map((style) => (
+            <button
+              key={style}
+              onClick={() => {
+                onChange(style);
+                setIsOpen(false);
+              }}
+              className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-black/30"
+            >
+              <div className="mt-0.5">{styleIcons[style]}</div>
+              <div>
+                <p className="font-medium">{style}</p>
+                <p className="text-xs text-zinc-400">{styleDescriptions[style]}</p>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

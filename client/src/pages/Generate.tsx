@@ -1,8 +1,15 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { colorSchemes, type AspectRatio, type IThumbnail, type ThumbnailStyle } from "../assets/assets";
+import {
+  colorSchemes,
+  type AspectRatio,
+  type IThumbnail,
+  type ThumbnailStyle,
+} from "../assets/assets";
 import SoftBackdrop from "../components/SoftBackdrop";
 import AspectRatioSelector from "../components/AspectRatioSelector";
+import StyleSelector from "../components/StyleSelector";
+import ColorSchemeSelector from "../components/ColorSchemeSelector";
 
 const Generate = () => {
   const { id } = useParams();
@@ -10,9 +17,11 @@ const Generate = () => {
   const [additionalDetails, setAdditionalDetails] = useState("");
   const [thumbnail, setThumbnail] = useState<IThumbnail | null>(null);
   const [loading, setLoading] = useState(false);
-  const [aspectRatio, setAspectRatio] = useState<AspectRatio>('16:9');
-  const [colorSchemeId, setColorSchemeId] = useState<string>(colorSchemes[0].id);
-  const [style, setStyle] = useState<ThumbnailStyle >('Bold & Graphic');
+  const [aspectRatio, setAspectRatio] = useState<AspectRatio>("16:9");
+  const [colorSchemeId, setColorSchemeId] = useState<string>(
+    colorSchemes[0].id
+  );
+  const [style, setStyle] = useState<ThumbnailStyle>("Bold & Graphic");
   const [styleDropdownOpen, setStyleDropdownOpen] = useState(false);
   return (
     <>
@@ -51,9 +60,20 @@ const Generate = () => {
                       </span>
                     </div>
                   </div>
-<AspectRatioSelector value={aspectRatio} onChange={setAspectRatio}/>
-                  {/* Style Selector */}
-                  {/* Color Scheme Selector */}
+                  <AspectRatioSelector
+                    value={aspectRatio}
+                    onChange={setAspectRatio}
+                  />
+                  <StyleSelector
+                    value={style}
+                    onChange={setStyle}
+                    isOpen={styleDropdownOpen}
+                    setIsOpen={setStyleDropdownOpen}
+                  />
+                  <ColorSchemeSelector
+                    value={colorSchemeId}
+                    onChange={setColorSchemeId}
+                  />
                   {/* details */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium">
