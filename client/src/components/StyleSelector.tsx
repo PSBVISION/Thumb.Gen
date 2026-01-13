@@ -58,7 +58,7 @@ const StyleSelector = ({
         />
       </button>
       {isOpen && (
-        <div className="absolute bottom-0 z-50 mt-1 w-full rounded-md border border-white/12 bg-black/20 backdrop-blur-3xl shadow-lg">
+        <div className="absolute top-7 z-50 mt-1 w-full rounded-md border border-white/12 bg-black/20 backdrop-blur-3xl shadow-lg">
           {thumbnailStyles.map((style) => (
             <button
               key={style}
@@ -71,7 +71,9 @@ const StyleSelector = ({
               <div className="mt-0.5">{styleIcons[style]}</div>
               <div>
                 <p className="font-medium">{style}</p>
-                <p className="text-xs text-zinc-400">{styleDescriptions[style]}</p>
+                <p className="text-xs text-zinc-400">
+                  {styleDescriptions[style]}
+                </p>
               </div>
             </button>
           ))}
