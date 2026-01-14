@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -10,23 +10,28 @@ import MyGenerate from "./pages/MyGenerate";
 import YtPreview from "./pages/YtPreview";
 import Login from "./components/Login";
 import NotFound from "./pages/NotFound";
+import { useEffect } from "react";
 
 export default function App() {
-    return (
-        <>
-            <LenisScroll />
-            <Navbar />
-            <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/generate" element={<Generate />} />
-                <Route path="/generate/:id" element={<Generate />} />
-                <Route path="/my-generation" element={<MyGenerate />} />
-                <Route path="/preview" element={<YtPreview />} />
-                <Route path="/pricing" element={<Pricing />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="*" element={<NotFound />} />
-            </Routes>
-            <Footer />
-        </>
-    );
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return (
+    <>
+      <LenisScroll />
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/generate" element={<Generate />} />
+        <Route path="/generate/:id" element={<Generate />} />
+        <Route path="/my-generation" element={<MyGenerate />} />
+        <Route path="/preview" element={<YtPreview />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      <Footer />
+    </>
+  );
 }
