@@ -3,11 +3,20 @@ import { yt_html } from "../assets/assets";
 
 const YtPreview = () => {
   const [searchParams] = useSearchParams();
-  const thumbnail_url = searchParams.get('thumbnail_url');
-  const title = searchParams.get('title');
+  const thumbnail_url = searchParams.get('thumbnail_url') || '';
+  const title = searchParams.get('title') || '';
+  
+  if (!thumbnail_url || !title) {
+    return (
+      <div className="fixed inset-0 z-100 bg-black flex items-center justify-center text-white">
+        <p>Missing thumbnail URL or title</p>
+      </div>
+    );
+  }
+  
   const new_html = yt_html
-    .replace("%%THUMBNAIL_URL%%", thumbnail_url!)
-    .replace("%%TITLE%%", title!);
+    .replace("%%THUMBNAIL_URL%%", thumbnail_url)
+    .replace("%%TITLE%%", title);
   return (
     <div className="fixed inset-0 z-100 bg-black">
       <iframe
