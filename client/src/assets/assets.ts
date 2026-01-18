@@ -51,15 +51,13 @@ export interface IThumbnail {
   userId: string;
   title: string;
   description?: string;
-  style:
-    | "Bold & Graphic"
+  style: "Bold & Graphic"
     | "Tech/Futuristic"
     | "Minimalist"
     | "Photorealistic"
     | "Illustrated";
   aspect_ratio?: "16:9" | "1:1" | "9:16";
-  color_scheme?:
-    | "vibrant"
+  color_scheme?: "vibrant"
     | "sunset"
     | "forest"
     | "neon"
