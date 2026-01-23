@@ -113,11 +113,6 @@ const MyGenerate = () => {
                         {thumb.isGenerating ? "Generating..." : "No Image"}
                       </div>
                     )}
-                    {thumb.isGenerating && (
-                      <div className="absolute inset-0 bg-black/50 flex items-center text-sm font-medium text-white">
-                        Generating...
-                      </div>
-                    )}
                   </div>
                   {/*content */}
                   <div className="p-4 space-y-2">
