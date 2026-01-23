@@ -49,7 +49,7 @@ const MyGenerate = () => {
     }
   };
   useEffect(() => {
-    if(!isLoggedIn){
+    if(isLoggedIn){
       fetchThumbnails();
     }
   },[isLoggedIn]);
