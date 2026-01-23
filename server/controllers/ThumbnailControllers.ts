@@ -123,12 +123,9 @@ export const generateThumbnail = async (req: Request, res: Response) => {
       }
     }
     const filename = `final_thumbnail_${Date.now()}.png`;
-    const filePath = path.join('images', filename);
-    
-    //Create the images directory if it doesn't exist
-    fs.mkdirSync('images', {recursive:true})
+    const filePath = path.join('/tmp', filename);
 
-    //Write the final image to the file
+    //Write the final image to the /tmp directory (works on serverless platforms)
     fs.writeFileSync(filePath, finalBuffer!);
     
     const uploadResult = await cloudinary.uploader.upload(filePath, {resource_type: 'image'})
