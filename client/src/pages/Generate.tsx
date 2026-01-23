@@ -1,8 +1,7 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   colorSchemes,
-  dummyThumbnails,
   type AspectRatio,
   type IThumbnail,
   type ThumbnailStyle,
@@ -34,8 +33,8 @@ const Generate = () => {
   const handleGenerate = async () => {
     // Generation logic here
     if (!isLoggedIn) return toast.error("Please login to generate thumbnails.");
-        if (!title.trim()) return toast.error("Please enter a title or topic.");
-            setLoading(true);
+    if (!title.trim()) return toast.error("Please enter a title or topic.");
+    setLoading(true);
     const api_payload = {
       title,
       prompt: additionalDetails,
