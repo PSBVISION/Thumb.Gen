@@ -8,6 +8,7 @@ import {
 import ai from "../configs/ai.js";
 import path from "path";
 import fs from "fs";
+import os from "os";
 import {v2 as cloudinary} from 'cloudinary';
 
 const stylePrompts = {
@@ -123,9 +124,9 @@ export const generateThumbnail = async (req: Request, res: Response) => {
       }
     }
     const filename = `final_thumbnail_${Date.now()}.png`;
-    const filePath = path.join('/tmp', filename);
+    const filePath = path.join(os.tmpdir(), filename);
 
-    //Write the final image to the /tmp directory (works on serverless platforms)
+    //Write the final image to temp directory (works on Windows, Linux, and serverless)
     fs.writeFileSync(filePath, finalBuffer!);
     
     const uploadResult = await cloudinary.uploader.upload(filePath, {resource_type: 'image'})

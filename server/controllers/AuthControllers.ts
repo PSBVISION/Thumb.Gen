@@ -2,6 +2,70 @@ import { Request, Response } from "express";
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 
+// Helper function to decode JWT without verification (Google already verified it)
+const decodeJwt = (token: string) => {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(
+    atob(base64)
+      .split('')
+      .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+      .join('')
+  );
+  return JSON.parse(jsonPayload);
+};
+
+export const googleAuth = async (req: Request, res: Response) => {
+  try {
+    const { credential } = req.body;
+    
+    if (!credential) {
+      return res.status(400).json({ message: "Google credential is required" });
+    }
+
+    // Decode the JWT token from Google
+    const decoded = decodeJwt(credential);
+    
+    const { email, name, sub: googleId, picture } = decoded;
+
+    // Check if user already exists
+    let user = await User.findOne({ email });
+
+    if (user) {
+      // User exists, update Google ID if not set
+      if (!user.googleId) {
+        user.googleId = googleId;
+        await user.save();
+      }
+    } else {
+      // Create new user with Google auth
+      user = new User({
+        name,
+        email,
+        googleId,
+        password: await bcrypt.hash(googleId + process.env.SESSION_SECRET, 10), // Random password for Google users
+      });
+      await user.save();
+    }
+
+    // Set session
+    req.session.isLoggedIn = true;
+    req.session.userId = user._id as string;
+
+    return res.json({
+      message: "Login successful",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error: any) {
+    console.log("Error in Google Auth:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const registerUser = async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body;

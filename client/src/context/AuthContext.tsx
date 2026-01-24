@@ -15,6 +15,7 @@ interface AuthContextProps {
     password: string;
   }) => Promise<void>;
   logout: () => Promise<void>;
+  googleLogin: (credential: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps>({
@@ -25,6 +26,7 @@ const AuthContext = createContext<AuthContextProps>({
   login: async () => {},
   signUp: async () => {},
   logout: async () => {},
+  googleLogin: async () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -69,6 +71,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const googleLogin = async (credential: string) => {
+    try {
+      const {data} = await api.post('/api/auth/google', { credential });
+      if(data.user){
+        setUser(data.user as IUser);
+        setIsLoggedIn(true);
+      }
+      toast.success(data.message);
+    } catch (error) {
+      console.error("Google Login failed:", error);
+      toast.error("Google Login failed");
+    }
+  };
+
   const fetchUser = async () => {
     try {
       const {data} = await api.get('/api/auth/verify');
@@ -95,6 +111,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     signUp,
     login,
     logout,
+    googleLogin,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

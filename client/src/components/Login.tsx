@@ -1,13 +1,42 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useCallback, useRef } from "react"
 import SoftBackdrop from "./SoftBackdrop"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 
+declare global {
+  interface Window {
+    google?: {
+      accounts: {
+        id: {
+          initialize: (config: {
+            client_id: string;
+            callback: (response: { credential: string }) => void;
+            ux_mode?: string;
+          }) => void;
+          prompt: () => void;
+          renderButton: (
+            element: HTMLElement,
+            config: {
+              theme?: string;
+              size?: string;
+              width?: string;
+              text?: string;
+              shape?: string;
+              type?: string;
+            }
+          ) => void;
+        };
+      };
+    };
+  }
+}
+
 const Login = () => {
   const [state, setState] = useState("login")
-  const {user, login, signUp} = useAuth()
-    const navigate = useNavigate()
-    const [formData, setFormData] = useState({
+  const {user, login, signUp, googleLogin} = useAuth()
+  const navigate = useNavigate()
+  const googleButtonRef = useRef<HTMLDivElement>(null)
+  const [formData, setFormData] = useState({
         name: '',
         email: '',
         password: ''
@@ -26,11 +55,51 @@ const Login = () => {
             signUp(formData)
         }
     }
+    const handleGoogleCallback = useCallback(async (response: { credential: string }) => {
+        await googleLogin(response.credential)
+    }, [googleLogin])
+
+    useEffect(() => {
+        // Load Google Identity Services script
+        const script = document.createElement('script')
+        script.src = 'https://accounts.google.com/gsi/client'
+        script.async = true
+        script.defer = true
+        document.body.appendChild(script)
+
+        script.onload = () => {
+            if (window.google && googleButtonRef.current) {
+                window.google.accounts.id.initialize({
+                    client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+                    callback: handleGoogleCallback,
+                    ux_mode: 'popup',
+                })
+                // Render Google's official button which opens centered popup
+                window.google.accounts.id.renderButton(
+                    googleButtonRef.current,
+                    {
+                        theme: 'outline',
+                        size: 'large',
+                        width: '250',
+                        text: state === 'login' ? 'signin_with' : 'signup_with',
+                        shape: 'pill',
+                    }
+                )
+            }
+        }
+
+        return () => {
+            if (document.body.contains(script)) {
+                document.body.removeChild(script)
+            }
+        }
+    }, [handleGoogleCallback, state])
+
     useEffect(()=>{
         if(user){
             navigate('/')
         }
-    },[user])
+    },[user, navigate])
   return (
     <main className="flex items-center justify-center min-h-screen">
             <form
@@ -69,10 +138,10 @@ const Login = () => {
                     {state === "login" ? "Login" : "Sign up"}
                 </button>
                 <p className="pt-4">Or</p>
-                <button type="button" className="w-full flex items-center gap-2 justify-center my-3 bg-white border border-gray-500/30 py-2.5 rounded-full text-gray-800">
-                <img className="h-4 w-4" src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/login/googleFavicon.png" alt="googleFavicon" />
-                {state==="login" ? "Log in with Google" : "Sign up with Google"}
-            </button>
+                <div 
+                    ref={googleButtonRef}
+                    className="w-full flex items-center justify-center my-3"
+                ></div>
 
                 <p onClick={() => setState(prev => prev === "login" ? "register" : "login")} className="text-gray-400 text-sm mt-3 mb-11 cursor-pointer" >
                     {state === "login" ? "Don't have an account?" : "Already have an account?"}
