@@ -120,7 +120,7 @@ Generate stunning thumbnails using Google's Gemini AI with customizable options:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/ThumbGen.git
+   git clone https://github.com/psbvision/ThumbGen.git
    cd ThumbGen
    ```
 
@@ -310,3 +310,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
  
   </a>
 </p>
+<h6 align="right"><sub><i>Thanks AI for writing this cool README</i></sub></h6>
